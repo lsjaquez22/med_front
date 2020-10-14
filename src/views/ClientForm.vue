@@ -2,17 +2,17 @@
   <div>
     <title-bar :title-stack="titleStack" />
     <hero-bar>
-      {{ heroTitle }}
+      <!-- {{ heroTitle }} -->
       <router-link slot="right" :to="heroRouterLinkTo" class="button">
         {{ heroRouterLinkLabel }}
       </router-link>
     </hero-bar>
     <section class="section is-main-section">
-      <notification class="is-info">
+      <!-- <notification class="is-info">
         <div>
           <span><b>Demo only.</b> No data will be saved/updated</span>
         </div>
-      </notification>
+      </notification> -->
       <tiles>
         <card-component
           :title="formCardTitle"
@@ -28,28 +28,28 @@
               <file-picker />
             </b-field>
             <hr />
-            <b-field label="Name" message="Client name" horizontal>
+            <b-field label="Nombre" message="Campo Requerido" horizontal>
               <b-input
                 v-model="form.name"
                 placeholder="e.g. John Doe"
                 required
               />
             </b-field>
-            <b-field label="Company" message="Client's company name" horizontal>
+            <b-field label="Telefono" message="Campo Requerido" horizontal>
               <b-input
                 v-model="form.company"
-                placeholder="e.g. Berton & Steinway"
+                placeholder="e.g. 614-123-45-67"
                 required
               />
             </b-field>
-            <b-field label="City" message="Client's city" horizontal>
+            <!-- <b-field label="City" message="Client's city" horizontal>
               <b-input
                 v-model="form.city"
                 placeholder="e.g. Geoffreyton"
                 required
               />
-            </b-field>
-            <b-field label="Created" horizontal>
+            </b-field> -->
+            <!-- <b-field label="Created" horizontal>
               <b-datepicker
                 v-model="form.created_date"
                 placeholder="Click to select..."
@@ -57,20 +57,33 @@
                 @input="input"
               >
               </b-datepicker>
-            </b-field>
-            <hr />
+            </b-field> -->
+            <!-- <hr />
             <b-field label="Progress" horizontal>
               <b-slider v-model="form.progress" />
-            </b-field>
+            </b-field> -->
             <hr />
-            <b-field horizontal>
-              <b-button
-                type="is-primary"
-                :loading="isLoading"
-                native-type="submit"
-                >Submit</b-button
-              >
-            </b-field>
+            <div class="footer-menu-cliente">
+              <b-field horizontal>
+                <b-button
+                  type="is-success"
+                  :loading="isLoading"
+                  native-type="submit"
+                  >Guardar</b-button
+                >
+              </b-field>
+              <!-- <b-field horizontal>
+                <b-button
+                  type="is-danger"
+                  :loading="isLoading"
+                  native-type="submit"
+                  >Cancelar</b-button
+                >
+              </b-field> -->
+              <router-link slot="right" to="/" class="button is-danger">
+                Cancelar
+              </router-link>
+            </div>
           </form>
         </card-component>
         <card-component
@@ -84,13 +97,13 @@
             class="image has-max-width is-aligned-center"
           />
           <hr />
-          <b-field label="Name">
+          <b-field label="Nombre">
             <b-input :value="form.name" custom-class="is-static" readonly />
           </b-field>
-          <b-field label="Company">
+          <b-field label="Telefono">
             <b-input :value="form.company" custom-class="is-static" readonly />
           </b-field>
-          <b-field label="City">
+          <!-- <b-field label="City">
             <b-input :value="form.city" custom-class="is-static" readonly />
           </b-field>
           <b-field label="Created">
@@ -99,16 +112,16 @@
               custom-class="is-static"
               readonly
             />
-          </b-field>
-          <hr />
-          <b-field label="Progress">
+          </b-field> -->
+          <!-- <hr /> -->
+          <!-- <b-field label="Progress">
             <progress
               class="progress is-small is-primary"
               :value="form.progress"
               max="100"
               >{{ form.progress }}</progress
             >
-          </b-field>
+          </b-field> -->
         </card-component>
       </tiles>
     </section>
@@ -125,7 +138,6 @@ import Tiles from '@/components/Tiles'
 import CardComponent from '@/components/CardComponent'
 import FilePicker from '@/components/FilePicker'
 import UserAvatar from '@/components/UserAvatar'
-import Notification from '@/components/Notification'
 
 export default {
   name: 'ClientForm',
@@ -135,8 +147,7 @@ export default {
     CardComponent,
     Tiles,
     HeroBar,
-    TitleBar,
-    Notification
+    TitleBar
   },
   props: {
     id: {
@@ -159,16 +170,16 @@ export default {
       if (this.isProfileExists) {
         lastCrumb = this.form.name
       } else {
-        lastCrumb = 'New client'
+        lastCrumb = 'Nuevo Paciente'
       }
 
-      return ['Admin', 'Clients', lastCrumb]
+      return ['Hospital', 'Paciente', lastCrumb]
     },
     heroTitle () {
       if (this.isProfileExists) {
         return this.form.name
       } else {
-        return 'Create Client'
+        return 'Nuevo Paciente'
       }
     },
     heroRouterLinkTo () {
@@ -180,7 +191,7 @@ export default {
     },
     heroRouterLinkLabel () {
       if (this.isProfileExists) {
-        return 'New client'
+        return 'Nuevo Paciente'
       } else {
         return 'Dashboard'
       }
@@ -189,7 +200,7 @@ export default {
       if (this.isProfileExists) {
         return 'Edit Client'
       } else {
-        return 'New Client'
+        return 'Nuevo Paciente'
       }
     }
   },
