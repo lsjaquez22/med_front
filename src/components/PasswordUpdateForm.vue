@@ -1,10 +1,10 @@
 <template>
-  <card-component title="Change Password" icon="lock">
+  <card-component title="Actualizar Contraseña" icon="lock">
     <form @submit.prevent="submit">
       <b-field
         horizontal
-        label="Current password"
-        message="Required. Your current password"
+        label="Contraseña Actual"
+        message="Campo Requerido"
       >
         <b-input
           v-model="form.password_current"
@@ -15,7 +15,7 @@
         />
       </b-field>
       <hr />
-      <b-field horizontal label="New password" message="Required. New password">
+      <b-field horizontal label="Nueva Contraseña" message="Campo Requerido">
         <b-input
           v-model="form.password"
           name="password"
@@ -26,8 +26,8 @@
       </b-field>
       <b-field
         horizontal
-        label="Confirm password"
-        message="Required. New password one more time"
+        label="Confirmar Nueva Contraseña"
+        message="Campo Requerido"
       >
         <b-input
           v-model="form.password_confirmation"
@@ -39,14 +39,17 @@
       </b-field>
       <hr />
       <b-field horizontal>
-        <div class="control">
+        <div class="control footer-menu-profile">
           <button
             type="submit"
-            class="button is-primary"
+            class="button is-success"
             :class="{ 'is-loading': isLoading }"
           >
-            Submit
+            Guardar
           </button>
+          <router-link slot="right" to="/" class="button is-danger">
+            Cancelar
+          </router-link>
         </div>
       </b-field>
     </form>

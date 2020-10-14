@@ -21,7 +21,7 @@
       </notification> -->
       <card-component
         class="has-table has-mobile-sort-spaced"
-        title="Clients"
+        title="Pacientes"
         icon="account-multiple"
       >
         <clients-table-sample

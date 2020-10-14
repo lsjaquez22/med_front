@@ -69,7 +69,7 @@
             <p>
               <b-icon icon="emoticon-sad" size="is-large" />
             </p>
-            <p>Sin pacientes&hellip;</p>
+            <p>Error de conexión&hellip;</p>
           </template>
         </div>
       </section>

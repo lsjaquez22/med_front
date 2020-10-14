@@ -2,7 +2,7 @@
   <div>
     <title-bar :title-stack="titleStack" />
     <hero-bar>
-      Profile
+      <!-- Profile -->
       <router-link slot="right" to="/" class="button">
         Dashboard
       </router-link>
@@ -10,14 +10,14 @@
     <section class="section is-main-section">
       <tiles>
         <profile-update-form class="tile is-child" />
-        <card-component title="Profile" icon="account" class="tile is-child">
+        <card-component title="Perfil" icon="account" class="tile is-child">
           <user-avatar class="image has-max-width is-aligned-center" />
           <hr />
-          <b-field label="Name">
+          <b-field label="Nombre">
             <b-input :value="userName" custom-class="is-static" readonly />
           </b-field>
           <hr />
-          <b-field label="E-mail">
+          <b-field label="Correo">
             <b-input :value="userEmail" custom-class="is-static" readonly />
           </b-field>
         </card-component>
@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     titleStack () {
-      return ['Admin', 'Profile']
+      return ['Perfil']
     },
     ...mapState(['userName', 'userEmail'])
   }

@@ -1,26 +1,29 @@
 <template>
-  <card-component title="Edit Profile" icon="account-circle">
+  <card-component title="Editar Perfil" icon="account-circle">
     <form @submit.prevent="submit">
       <b-field horizontal label="Avatar">
         <file-picker />
       </b-field>
       <hr />
-      <b-field horizontal label="Name" message="Required. Your name">
+      <b-field horizontal label="Nombre" message="Campo Requerido">
         <b-input v-model="form.name" name="name" required />
       </b-field>
-      <b-field horizontal label="E-mail" message="Required. Your e-mail">
+      <b-field horizontal label="Correo" message="Campo Requerido">
         <b-input v-model="form.email" name="email" type="email" required />
       </b-field>
       <hr />
       <b-field horizontal>
-        <div class="control">
+        <div class="control footer-menu-profile">
           <button
             type="submit"
-            class="button is-primary"
+            class="button is-success"
             :class="{ 'is-loading': isLoading }"
           >
-            Submit
+            Guardar
           </button>
+          <router-link slot="right" to="/" class="button is-danger">
+            Cancelar
+          </router-link>
         </div>
       </b-field>
     </form>

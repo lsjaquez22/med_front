@@ -66,7 +66,7 @@
               exact-active-class="is-active"
             >
               <b-icon icon="account" custom-size="default" />
-              <span>My Profile</span>
+              <span>Perfil</span>
             </router-link>
             <!-- <a class="navbar-item">
               <b-icon icon="settings" custom-size="default"></b-icon>
@@ -79,7 +79,7 @@
             <hr class="navbar-divider" />
             <a class="navbar-item">
               <b-icon icon="logout" custom-size="default"></b-icon>
-              <span>Log Out</span>
+              <span>Cerrar Sesión</span>
             </a>
           </div>
         </nav-bar-menu>
