@@ -20,15 +20,32 @@ export default {
   },
   computed: {
     menu () {
-      return [
-        'Hospital',
-        [
-          {
-            to: '/',
-            icon: 'desktop-mac',
-            label: 'Pacientes'
-          }
+      if (this.$route.meta.admin) {
+        return [
+          'Admin',
+          [
+            {
+              to: '/admin',
+              icon: 'hospital-building',
+              label: 'Hospitales'
+            },
+            {
+              to: '/admin/doctores',
+              icon: 'clipboard-account',
+              label: 'Doctores'
+            }
+          ]
         ]
+      } else {
+        return [
+          'Hospital',
+          [
+            {
+              to: '/',
+              icon: 'desktop-mac',
+              label: 'Pacientes'
+            }
+          ]
         // 'Examples',
         // [
         //   {
@@ -76,7 +93,8 @@ export default {
         //     icon: 'help-circle'
         //   }
         // ]
-      ]
+        ]
+      }
     }
   },
   created () {

@@ -20,6 +20,10 @@
           <b-field label="Correo">
             <b-input :value="userEmail" custom-class="is-static" readonly />
           </b-field>
+          <hr />
+          <b-field label="Hospital">
+            <b-input :value="userCompany" custom-class="is-static" readonly />
+          </b-field>
         </card-component>
       </tiles>
       <password-update-form />
@@ -51,7 +55,7 @@ export default {
     titleStack () {
       return ['Perfil']
     },
-    ...mapState(['userName', 'userEmail'])
+    ...mapState(['userName', 'userEmail', 'userComapny'])
   }
 }
 </script>
