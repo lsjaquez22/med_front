@@ -13,7 +13,6 @@ const routes = [
     },
     path: '/',
     name: 'home',
-    admin: false,
     component: () => import(/* webpackChunkName: "tables" */ '../views/Tables.vue')
   },
   {
@@ -23,11 +22,22 @@ const routes = [
     },
     path: '/tables',
     name: 'tables',
-    admin: false,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "tables" */ '../views/Tables.vue')
+  },
+  {
+    meta: {
+      title: 'Paciente',
+      admin: false
+    },
+    path: '/paciente/:id',
+    name: 'paciente',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "tables" */ '../views/Paciente.vue')
   },
   {
     meta: {
@@ -36,7 +46,6 @@ const routes = [
     },
     path: '/forms',
     name: 'forms',
-    admin: false,
     component: () => import(/* webpackChunkName: "forms" */ '../views/Forms.vue')
   },
   {
@@ -46,7 +55,6 @@ const routes = [
     },
     path: '/profile',
     name: 'profile',
-    admin: false,
     component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue')
   },
   {

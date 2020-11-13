@@ -31,8 +31,8 @@
           <img :src="props.row.avatar" class="is-rounded">
         </div>
       </b-table-column>
-      <b-table-column label="Nombre" field="name" sortable v-slot="props">
-        {{ props.row.name }}
+      <b-table-column cell-class="link-name" label="Nombre" field="name" sortable v-slot="props">
+        <div v-on:click="showPacient(props.row.id)" >{{ props.row.name }}</div>
       </b-table-column>
       <b-table-column label="Telefono" field="company" sortable v-slot="props">
         {{ props.row.company }}
@@ -114,6 +114,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.dataUrl)
     if (this.dataUrl) {
       this.isLoading = true
       axios
@@ -150,6 +151,9 @@ export default {
     },
     trashCancel () {
       this.isModalActive = false
+    },
+    showPacient (userID) {
+      this.$router.push({ name: 'paciente', params: { id: userID } })
     }
   }
 }

@@ -11,6 +11,12 @@
       <router-link slot="right" :to="heroRouterLinkTo" class="button">
         {{ heroRouterLinkLabel }}
       </router-link>
+      <div class="search_bar" slot="right">
+          <input class="input" placeholder="Buscar Paciente" />
+      </div>
+      <div class="search_button" slot="right">
+          <button class="button is-primary">Buscar</button>
+      </div>
     </hero-bar>
     <section class="section is-main-section">
       <!-- <notification class="is-info">

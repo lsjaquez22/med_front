@@ -30,17 +30,32 @@
             <hr />
             <b-field label="Nombre" message="Campo Requerido" horizontal>
               <b-input
-                v-model="form.name"
+                v-model="formToEdit.name"
                 placeholder="e.g. John Doe"
                 required
               />
             </b-field>
-            <b-field label="Hospital" message="Campo Requerido" horizontal>
+            <!-- <b-field label="Hospital" message="Campo Requerido" horizontal>
               <b-input
                 v-model="form.company"
                 placeholder="e.g. 614-123-45-67"
                 required
               />
+            </b-field> -->
+            <b-field label="Hospital" horizontal>
+              <b-select
+                v-model="formToEdit.company"
+                placeholder="Select a Hospital"
+                required
+              >
+                <option
+                  v-for="(hospital, index) in hospitals"
+                  :key="index"
+                  :value="hospital"
+                >
+                  {{ hospital }}
+                </option>
+              </b-select>
             </b-field>
             <!-- <b-field label="City" message="Client's city" horizontal>
               <b-input
@@ -88,7 +103,7 @@
         </card-component>
         <card-component
           v-if="isProfileExists"
-          title="Client Profile"
+          title="Doctor Profile"
           icon="account"
           class="tile is-child"
         >
@@ -140,7 +155,7 @@ import FilePicker from '@/components/FilePicker'
 import UserAvatar from '@/components/UserAvatar'
 
 export default {
-  name: 'HospitalForm',
+  name: 'DoctorForm',
   components: {
     UserAvatar,
     FilePicker,
@@ -160,7 +175,9 @@ export default {
       isLoading: false,
       form: this.getClearFormObject(),
       createdReadable: null,
-      isProfileExists: false
+      isProfileExists: false,
+      formToEdit: this.getClearFormObject(),
+      hospitals: ['Hospital Angeles', 'Hospital Cima', 'Hospital Christus Muguerza']
     }
   },
   computed: {
@@ -243,6 +260,7 @@ export default {
             if (item) {
               this.isProfileExists = true
               this.form = item
+              this.formToEdit = { ...item }
               this.form.created_date = new Date(item.created_mm_dd_yyyy)
               this.createdReadable = dayjs(
                 new Date(item.created_mm_dd_yyyy)

@@ -36,3 +36,27 @@
     margin-left: 2em;
   }
 }
+
+.link-name:hover {
+  cursor: pointer;
+}
+
+.container_results {
+  .card_result {
+    margin: 1em 2em;
+    .save_comment{
+      text-align: center;
+    }
+    figure{
+      cursor: pointer;
+    }
+  }
+  .result_titles{
+    margin: 1em 2em;
+  }
+}
+
+.search_bar{
+  margin-left: 3em;
+  margin-right: 1em;
+}
