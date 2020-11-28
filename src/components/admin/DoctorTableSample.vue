@@ -37,9 +37,9 @@
       <b-table-column label="Hospital" field="company" sortable v-slot="props">
         {{ props.row.company }}
       </b-table-column>
-      <!-- <b-table-column label="City" field="city" sortable v-slot="props">
-        {{ props.row.city }}
-      </b-table-column> -->
+      <b-table-column label="Correo" field="city" sortable v-slot="props">
+        {{ props.row.company }}
+      </b-table-column>
       <!-- <b-table-column cell-class="is-progress-col" label="Progress" field="progress" sortable v-slot="props">
         <progress class="progress is-small is-primary" :value="props.row.progress" max="100">{{ props.row.progress }}</progress>
       </b-table-column>

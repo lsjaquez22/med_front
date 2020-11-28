@@ -20,10 +20,10 @@
           class="tile is-child"
         >
           <form @submit.prevent="submit">
-            <b-field label="ID" horizontal>
+            <!-- <b-field label="ID" horizontal>
               <b-input v-model="form.id" custom-class="is-static" readonly />
             </b-field>
-            <hr />
+            <hr /> -->
             <b-field label="Avatar" horizontal>
               <file-picker />
             </b-field>
@@ -40,6 +40,13 @@
                 v-model="form.company"
                 placeholder="e.g. 614-123-45-67"
                 required
+              />
+            </b-field>
+            <b-field label="Codigo de Acceso" horizontal >
+              <b-input
+                v-model="form.code"
+                placeholder="-"
+                readonly
               />
             </b-field>
             <!-- <b-field label="City" message="Client's city" horizontal>
@@ -102,6 +109,9 @@
           </b-field>
           <b-field label="Telefono">
             <b-input :value="form.company" custom-class="is-static" readonly />
+          </b-field>
+          <b-field label="Codigo de Acceso">
+            <b-input :value="form.code" custom-class="is-static" readonly />
           </b-field>
           <!-- <b-field label="City">
             <b-input :value="form.city" custom-class="is-static" readonly />
@@ -234,10 +244,10 @@ export default {
       if (this.$route.params.id) {
         axios
           .get(`${this.$router.options.base}data-sources/clients.json`)
-          .then((r) => {
+          .then(r => {
             const item = find(
               r.data.data,
-              (item) => item.id === parseInt(this.$route.params.id)
+              item => item.id === parseInt(this.$route.params.id)
             )
 
             if (item) {
@@ -251,7 +261,7 @@ export default {
               this.$router.push({ name: 'client.new' })
             }
           })
-          .catch((e) => {
+          .catch(e => {
             this.$buefy.toast.open({
               message: `Error: ${e.message}`,
               type: 'is-danger',

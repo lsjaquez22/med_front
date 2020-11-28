@@ -20,10 +20,10 @@
           class="tile is-child"
         >
           <form @submit.prevent="submit">
-            <b-field label="ID" horizontal>
+            <!-- <b-field label="ID" horizontal>
               <b-input v-model="form.id" custom-class="is-static" readonly />
             </b-field>
-            <hr />
+            <hr /> -->
             <b-field label="Avatar" horizontal>
               <file-picker />
             </b-field>

@@ -20,10 +20,10 @@
           class="tile is-child"
         >
           <form @submit.prevent="submit">
-            <b-field label="ID" horizontal>
+            <!-- <b-field label="ID" horizontal>
               <b-input v-model="form.id" custom-class="is-static" readonly />
             </b-field>
-            <hr />
+            <hr /> -->
             <b-field label="Avatar" horizontal>
               <file-picker />
             </b-field>
@@ -35,17 +35,24 @@
                 required
               />
             </b-field>
-            <!-- <b-field label="Hospital" message="Campo Requerido" horizontal>
+            <b-field label="Correo" message="Campo Requerido" horizontal>
               <b-input
-                v-model="form.company"
-                placeholder="e.g. 614-123-45-67"
+                v-model="form.mail"
+                placeholder="e.g. Geoffreyton"
                 required
               />
-            </b-field> -->
-            <b-field label="Hospital" horizontal>
+            </b-field>
+            <b-field label="Contrañsea" message="Campo Requerido" horizontal>
+              <b-input
+                v-model="form.password"
+                type="password"
+                required
+              />
+            </b-field>
+            <b-field label="Hospital" message="Campo Requerido" horizontal>
               <b-select
                 v-model="formToEdit.company"
-                placeholder="Select a Hospital"
+                placeholder="Seleccionar Hospital"
                 required
               >
                 <option
@@ -57,13 +64,6 @@
                 </option>
               </b-select>
             </b-field>
-            <!-- <b-field label="City" message="Client's city" horizontal>
-              <b-input
-                v-model="form.city"
-                placeholder="e.g. Geoffreyton"
-                required
-              />
-            </b-field> -->
             <!-- <b-field label="Created" horizontal>
               <b-datepicker
                 v-model="form.created_date"
@@ -117,6 +117,9 @@
           </b-field>
           <b-field label="Hospital">
             <b-input :value="form.company" custom-class="is-static" readonly />
+          </b-field>
+          <b-field label="Correo">
+            <b-input :value="form.mail" custom-class="is-static" readonly />
           </b-field>
           <!-- <b-field label="City">
             <b-input :value="form.city" custom-class="is-static" readonly />

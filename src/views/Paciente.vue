@@ -12,9 +12,23 @@
         class="image has-max-width is-aligned-center"
       />
       <hr />
+      <b-field label="Nombre">
+        <b-input
+          :value="this.pacient.name"
+          custom-class="is-static"
+          readonly
+        />
+      </b-field>
       <b-field label="Telefono">
         <b-input
           :value="this.pacient.company"
+          custom-class="is-static"
+          readonly
+        />
+      </b-field>
+      <b-field label="Codigo de Acceso">
+        <b-input
+          :value="this.pacient.code"
           custom-class="is-static"
           readonly
         />
