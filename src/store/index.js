@@ -18,10 +18,15 @@ export default new Vuex.Store({
 
     /* Aside */
     isAsideVisible: true,
-    isAsideMobileExpanded: false
+    isAsideMobileExpanded: false,
+    isLogged: true,
+    isAdmin: false
   },
   mutations: {
     /* A fit-them-all commit */
+    isLogged (state, value) {
+      state.isLogged = value
+    },
     basic (state, payload) {
       state[payload.key] = payload.value
     },
@@ -61,6 +66,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-
+    isLogged (context, value) {
+      context.commit('isLogged')
+    }
   }
 })

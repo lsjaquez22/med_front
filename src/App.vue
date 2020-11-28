@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <nav-bar />
-    <aside-menu :menu="menu" />
+    <div v-if="logged">
+      <nav-bar />
+      <aside-menu :menu="menu" />
+    </div>
     <router-view />
     <!-- <footer-bar /> -->
   </div>
@@ -19,6 +21,9 @@ export default {
     NavBar
   },
   computed: {
+    logged () {
+      return this.$store.state.isLogged
+    },
     menu () {
       if (this.$route.meta.admin) {
         return [
@@ -46,53 +51,53 @@ export default {
               label: 'Pacientes'
             }
           ]
-        // 'Examples',
-        // [
-        //   {
-        //     to: '/tables',
-        //     label: 'Tables',
-        //     icon: 'table',
-        //     updateMark: true
-        //   },
-        //   {
-        //     to: '/forms',
-        //     label: 'Forms',
-        //     icon: 'square-edit-outline'
-        //   },
-        //   {
-        //     to: '/profile',
-        //     label: 'Profile',
-        //     icon: 'account-circle'
-        //   },
-        //   {
-        //     label: 'Submenus',
-        //     subLabel: 'Submenus Example',
-        //     icon: 'view-list',
-        //     menu: [
-        //       {
-        //         href: '#void',
-        //         label: 'Sub-item One'
-        //       },
-        //       {
-        //         href: '#void',
-        //         label: 'Sub-item Two'
-        //       }
-        //     ]
-        //   }
-        // ],
-        // 'About',
-        // [
-        //   {
-        //     href: 'https://admin-one.justboil.me',
-        //     label: 'Premium Demo',
-        //     icon: 'credit-card'
-        //   },
-        //   {
-        //     href: 'https://justboil.me/bulma-admin-template/one',
-        //     label: 'About',
-        //     icon: 'help-circle'
-        //   }
-        // ]
+          // 'Examples',
+          // [
+          //   {
+          //     to: '/tables',
+          //     label: 'Tables',
+          //     icon: 'table',
+          //     updateMark: true
+          //   },
+          //   {
+          //     to: '/forms',
+          //     label: 'Forms',
+          //     icon: 'square-edit-outline'
+          //   },
+          //   {
+          //     to: '/profile',
+          //     label: 'Profile',
+          //     icon: 'account-circle'
+          //   },
+          //   {
+          //     label: 'Submenus',
+          //     subLabel: 'Submenus Example',
+          //     icon: 'view-list',
+          //     menu: [
+          //       {
+          //         href: '#void',
+          //         label: 'Sub-item One'
+          //       },
+          //       {
+          //         href: '#void',
+          //         label: 'Sub-item Two'
+          //       }
+          //     ]
+          //   }
+          // ],
+          // 'About',
+          // [
+          //   {
+          //     href: 'https://admin-one.justboil.me',
+          //     label: 'Premium Demo',
+          //     icon: 'credit-card'
+          //   },
+          //   {
+          //     href: 'https://justboil.me/bulma-admin-template/one',
+          //     label: 'About',
+          //     icon: 'help-circle'
+          //   }
+          // ]
         ]
       }
     }

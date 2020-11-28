@@ -1,15 +1,35 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store/index.js'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    // Document title tag
-    // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
+    meta: {
+      title: 'login',
+      admin: false,
+      requiresAuth: false
+    },
+    path: '/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName: "tables" */ '../views/Login.vue')
+  },
+  {
+    meta: {
+      title: 'admin_login',
+      admin: true,
+      requiresAuth: false
+    },
+    path: '/admin/login',
+    name: 'admin_login',
+    component: () => import(/* webpackChunkName: "tables" */ '../views/Login.vue')
+  },
+  {
     meta: {
       title: 'Dashboard',
-      admin: false
+      admin: false,
+      requiresAuth: true
     },
     path: '/',
     name: 'home',
@@ -18,31 +38,28 @@ const routes = [
   {
     meta: {
       title: 'Tables',
-      admin: false
+      admin: false,
+      requiresAuth: true
     },
     path: '/tables',
     name: 'tables',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "tables" */ '../views/Tables.vue')
   },
   {
     meta: {
       title: 'Paciente',
-      admin: false
+      admin: false,
+      requiresAuth: true
     },
     path: '/paciente/:id',
     name: 'paciente',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "tables" */ '../views/Paciente.vue')
   },
   {
     meta: {
       title: 'Forms',
-      admin: false
+      admin: false,
+      requiresAuth: true
     },
     path: '/forms',
     name: 'forms',
@@ -51,7 +68,8 @@ const routes = [
   {
     meta: {
       title: 'Profile',
-      admin: false
+      admin: false,
+      requiresAuth: true
     },
     path: '/profile',
     name: 'profile',
@@ -60,7 +78,8 @@ const routes = [
   {
     meta: {
       title: 'New Client',
-      admin: false
+      admin: false,
+      requiresAuth: true
     },
     path: '/client/new',
     name: 'client.new',
@@ -70,7 +89,8 @@ const routes = [
   {
     meta: {
       title: 'Edit Client',
-      admin: false
+      admin: false,
+      requiresAuth: true
     },
     path: '/client/:id',
     name: 'client.edit',
@@ -78,33 +98,30 @@ const routes = [
     props: true
   },
   {
-    // Document title tag
-    // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
     meta: {
       title: 'Dashboard Admin',
-      admin: true
+      admin: true,
+      requiresAuth: true
     },
     path: '/admin',
     name: 'Hospitales admin',
     component: () => import(/* webpackChunkName: "tables" */ '../views/admin/TablesHospitales.vue')
   },
   {
-    // Document title tag
-    // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
     meta: {
       title: 'Dashboard Admin',
-      admin: true
+      admin: true,
+      requiresAuth: true
     },
     path: '/admin/doctores',
     name: 'Doctores admin',
     component: () => import(/* webpackChunkName: "tables" */ '../views/admin/TablesDoctors.vue')
   },
   {
-    // Document title tag
-    // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
     meta: {
       title: 'New Hospital',
-      admin: true
+      admin: true,
+      requiresAuth: true
     },
     path: '/admin/hospital/new',
     name: 'hospital.new',
@@ -113,7 +130,8 @@ const routes = [
   {
     meta: {
       title: 'Edit Hospital',
-      admin: true
+      admin: true,
+      requiresAuth: true
     },
     path: '/hospital/:id',
     name: 'hospital.edit',
@@ -121,11 +139,10 @@ const routes = [
     props: true
   },
   {
-    // Document title tag
-    // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
     meta: {
       title: 'New Doctor',
-      admin: true
+      admin: true,
+      requiresAuth: true
     },
     path: '/admin/doctor/new',
     name: 'doctor.new',
@@ -134,7 +151,8 @@ const routes = [
   {
     meta: {
       title: 'Edit Doctor',
-      admin: true
+      admin: true,
+      requiresAuth: true
     },
     path: '/doctor/:id',
     name: 'doctor.edit',
@@ -151,6 +169,40 @@ const router = new VueRouter({
       return savedPosition
     } else {
       return { x: 0, y: 0 }
+    }
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('jwt') == null) {
+      store.dispatch('isLogged', false)
+      next({
+        path: '/login',
+        params: { nextUrl: to.fullPath }
+      })
+    } else {
+      const admin = store.state.isAdmin
+      if (to.matched.some(record => record.meta.admin)) {
+        if (admin) {
+          next()
+        } else {
+          next({ name: 'home' })
+        }
+      } else {
+        if (admin) {
+          next({ name: 'Hospitales admin' })
+        } else {
+          next()
+        }
+      }
+    }
+  } else {
+    if (localStorage.getItem('jwt') == null) {
+      store.dispatch('isLogged', false)
+      next()
+    } else {
+      next({ name: 'home' })
     }
   }
 })

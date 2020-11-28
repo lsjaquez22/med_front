@@ -1,5 +1,5 @@
 <template>
-    <div>LOGIN DOCTOR</div>
+    <div>LOGIN ADMIN</div>
 </template>
 
 <script>
