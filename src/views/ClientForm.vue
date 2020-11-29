@@ -30,24 +30,20 @@
             <hr />
             <b-field label="Nombre" message="Campo Requerido" horizontal>
               <b-input
-                v-model="form.name"
+                v-model="nameToEdit"
                 placeholder="e.g. John Doe"
                 required
               />
             </b-field>
             <b-field label="Telefono" message="Campo Requerido" horizontal>
               <b-input
-                v-model="form.company"
+                v-model="phoneToEdit"
                 placeholder="e.g. 614-123-45-67"
                 required
               />
             </b-field>
-            <b-field label="Codigo de Acceso" horizontal >
-              <b-input
-                v-model="form.code"
-                placeholder="-"
-                readonly
-              />
+            <b-field label="Codigo de Acceso" horizontal>
+              <b-input v-model="form.codigo" placeholder="-" readonly />
             </b-field>
             <!-- <b-field label="City" message="Client's city" horizontal>
               <b-input
@@ -76,6 +72,7 @@
                   type="is-success"
                   :loading="isLoading"
                   native-type="submit"
+                  v-on:click="updateData()"
                   >Guardar</b-button
                 >
               </b-field>
@@ -105,13 +102,23 @@
           />
           <hr />
           <b-field label="Nombre">
-            <b-input :value="form.name" custom-class="is-static" readonly />
+            <b-input :value="form.nombre" custom-class="is-static" readonly />
           </b-field>
           <b-field label="Telefono">
-            <b-input :value="form.company" custom-class="is-static" readonly />
+            <b-input :value="form.telefono" custom-class="is-static" readonly />
           </b-field>
           <b-field label="Codigo de Acceso">
-            <b-input :value="form.code" custom-class="is-static" readonly />
+            <b-input :value="form.codigo" custom-class="is-static" readonly />
+          </b-field>
+          <hr />
+          <b-field>
+            <b-button
+              type="is-danger"
+              :loading="isLoading"
+              native-type="submit"
+              v-on:click="deleteData()"
+              >Borrar</b-button
+            >
           </b-field>
           <!-- <b-field label="City">
             <b-input :value="form.city" custom-class="is-static" readonly />
@@ -141,7 +148,7 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
-import find from 'lodash/find'
+// import find from 'lodash/find'
 import TitleBar from '@/components/TitleBar'
 import HeroBar from '@/components/HeroBar'
 import Tiles from '@/components/Tiles'
@@ -170,7 +177,9 @@ export default {
       isLoading: false,
       form: this.getClearFormObject(),
       createdReadable: null,
-      isProfileExists: false
+      isProfileExists: false,
+      nameToEdit: null,
+      phoneToEdit: null
     }
   },
   computed: {
@@ -220,6 +229,8 @@ export default {
 
       if (!newValue) {
         this.form = this.getClearFormObject()
+        this.nameToEdit = null
+        this.phoneToEdit = null
       } else {
         this.getData()
       }
@@ -242,17 +253,21 @@ export default {
     },
     getData () {
       if (this.$route.params.id) {
-        axios
-          .get(`${this.$router.options.base}data-sources/clients.json`)
+        axios({
+          method: 'GET',
+          url: 'https://patas-app.herokuapp.com/api/paciente/esp',
+          params: {
+            id: this.$route.params.id
+          }
+        })
           .then(r => {
-            const item = find(
-              r.data.data,
-              item => item.id === parseInt(this.$route.params.id)
-            )
+            const item = r.data
 
             if (item) {
               this.isProfileExists = true
               this.form = item
+              this.nameToEdit = item.nombre
+              this.phoneToEdit = item.telefono
               this.form.created_date = new Date(item.created_mm_dd_yyyy)
               this.createdReadable = dayjs(
                 new Date(item.created_mm_dd_yyyy)
@@ -269,6 +284,72 @@ export default {
             })
           })
       }
+    },
+    updateData () {
+      if (this.isProfileExists) {
+        axios({
+          method: 'PUT',
+          url: 'https://patas-app.herokuapp.com/api/paciente/esp',
+          params: {
+            id: this.$route.params.id
+          },
+          data: {
+            nombre: this.nameToEdit,
+            telefono: this.phoneToEdit
+          }
+        }).then(r => {
+          const item = r.data
+
+          if (item) {
+            this.isProfileExists = true
+            this.form = item
+            this.nameToEdit = item.nombre
+            this.phoneToEdit = item.telefono
+            this.form.created_date = new Date(item.created_mm_dd_yyyy)
+            this.createdReadable = dayjs(
+              new Date(item.created_mm_dd_yyyy)
+            ).format('MMM D, YYYY')
+          } else {
+            this.$router.push({ name: 'client.new' })
+          }
+        })
+      } else {
+        axios({
+          method: 'POST',
+          url: 'https://patas-app.herokuapp.com/api/paciente/signup',
+          data: {
+            nombre: this.nameToEdit,
+            telefono: this.phoneToEdit,
+            doctor: this.$store.state.userId
+          }
+        }).then(r => {
+          const item = r.data
+
+          if (item) {
+            this.isProfileExists = true
+            this.form = item
+            this.nameToEdit = item.nombre
+            this.phoneToEdit = item.telefono
+            this.form.created_date = new Date(item.created_mm_dd_yyyy)
+            this.createdReadable = dayjs(
+              new Date(item.created_mm_dd_yyyy)
+            ).format('MMM D, YYYY')
+          } else {
+            this.$router.push({ name: 'client.new' })
+          }
+        })
+      }
+    },
+    deleteData () {
+      axios({
+        method: 'DELETE',
+        url: 'https://patas-app.herokuapp.com/api/paciente/esp',
+        params: {
+          id: this.$route.params.id
+        }
+      }).then(r => {
+        this.$router.push({ name: 'home' })
+      })
     },
     input (v) {
       this.createdReadable = dayjs(v).format('MMM D, YYYY')

@@ -69,14 +69,23 @@ export default {
   methods: {
     submit () {
       this.isLoading = true
-      setTimeout(() => {
-        this.isLoading = false
-        this.$store.commit('user', this.form)
-        this.$buefy.snackbar.open({
-          message: 'Updated',
-          queue: false
+      this.$store
+        .dispatch('updateUser', {
+          username: this.form.name,
+          email: this.form.email
         })
-      }, 500)
+        .then(() => {
+          setTimeout(() => {
+            this.isLoading = false
+            this.$store.commit('user', this.form)
+            this.$buefy.snackbar.open({
+              message: 'Updated',
+              queue: false
+            })
+          }, 500)
+        }).catch(() => {
+          this.isLoading = false
+        })
     }
   }
 }

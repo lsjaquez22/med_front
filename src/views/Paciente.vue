@@ -14,21 +14,21 @@
       <hr />
       <b-field label="Nombre">
         <b-input
-          :value="this.pacient.name"
+          :value="this.pacient.nombre"
           custom-class="is-static"
           readonly
         />
       </b-field>
       <b-field label="Telefono">
         <b-input
-          :value="this.pacient.company"
+          :value="this.pacient.telefono"
           custom-class="is-static"
           readonly
         />
       </b-field>
       <b-field label="Codigo de Acceso">
         <b-input
-          :value="this.pacient.code"
+          :value="this.pacient.codigo"
           custom-class="is-static"
           readonly
         />
@@ -50,132 +50,50 @@
         </div>
       </div>
       <section class="card_result">
-        <b-message type="is-info">
-          <div class="columns">
-            <div class="column is-2">
-              <figure class="image is-48x48">
-                <img src="https://bulma.io/images/placeholders/128x128.png" />
-              </figure>
-            </div>
-            <div class="column is-2">
-              <b-field>
-                <b-input
-                  value="01/01/2020"
-                  disabled
-                  type="search"
-                  icon="calendar-today"
-                >
-                </b-input>
-              </b-field>
-            </div>
-            <div class="column is-2">
-              <b-field>
-                <b-select value="1" disabled>
-                  <option value="0">Categoria 0</option>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </b-select>
-              </b-field>
-            </div>
-            <div class="column is-6">
-              <div class="columns">
-                <div class="column is-9">
-                  <b-field>
-                    <b-input></b-input>
-                  </b-field>
-                </div>
-                <div class="column is-3 save_comment">
-                  <button class="button is-primary ">Guardar</button>
+        <article class="message is-link" v-for="item in history" :key="item._id">
+          <div class="message-body">
+            <div class="columns">
+              <div class="column is-2">
+                <figure class="image">
+                  <img v-bind:src="'data:image/jpeg;base64,'+item.foto" />
+                </figure>
+              </div>
+              <div class="column is-2">
+                <b-field>
+                  <b-input
+                    :value="item.fecha"
+                    disabled
+                    type="search"
+                    icon="calendar-today"
+                  >
+                  </b-input>
+                </b-field>
+              </div>
+              <div class="column is-2">
+                <b-field>
+                  <b-select :value="item.resultado" disabled>
+                    <option value="0">Categoria 0</option>
+                    <option value="1">Categoria 1</option>
+                    <option value="2">Categoria 2</option>
+                    <option value="3">Categoria 3</option>
+                  </b-select>
+                </b-field>
+              </div>
+              <div class="column is-6">
+                <div class="columns">
+                  <div class="column is-9">
+                    <b-field>
+                      <b-input v-model="item.comentario"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-3 save_comment">
+                    <button class="button is-primary " v-on:click="updateComment(item._id, item.comentario)">Guardar</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </b-message>
-        <b-message type="is-danger">
-          <div class="columns">
-            <div class="column is-2">
-              <figure class="image is-48x48">
-                <img src="https://bulma.io/images/placeholders/128x128.png" />
-              </figure>
-            </div>
-            <div class="column is-2">
-              <b-field>
-                <b-input
-                  value="01/01/2020"
-                  disabled
-                  type="search"
-                  icon="calendar-today"
-                >
-                </b-input>
-              </b-field>
-            </div>
-            <div class="column is-2">
-              <b-field>
-                <b-select value="3" disabled>
-                  <option value="0">Categoria 0</option>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </b-select>
-              </b-field>
-            </div>
-            <div class="column is-6">
-              <div class="columns">
-                <div class="column is-9">
-                  <b-field>
-                    <b-input></b-input>
-                  </b-field>
-                </div>
-                <div class="column is-3 save_comment">
-                  <button class="button is-primary ">Guardar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </b-message>
-        <b-message type="is-warning">
-          <div class="columns">
-            <div class="column is-2">
-              <figure class="image is-48x48">
-                <img src="https://bulma.io/images/placeholders/128x128.png" />
-              </figure>
-            </div>
-            <div class="column is-2">
-              <b-field>
-                <b-input
-                  value="01/01/2020"
-                  disabled
-                  type="search"
-                  icon="calendar-today"
-                >
-                </b-input>
-              </b-field>
-            </div>
-            <div class="column is-2">
-              <b-field>
-                <b-select value="2" disabled>
-                  <option value="0">Categoria 0</option>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </b-select>
-              </b-field>
-            </div>
-            <div class="column is-6">
-              <div class="columns">
-                <div class="column is-9">
-                  <b-field>
-                    <b-input></b-input>
-                  </b-field>
-                </div>
-                <div class="column is-3 save_comment">
-                  <button class="button is-primary ">Guardar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </b-message>
+        </article>
       </section>
     </div>
   </div>
@@ -199,7 +117,8 @@ export default {
       paginated: false,
       perPage: 10,
       checkedRows: [],
-      pacient: {}
+      pacient: {},
+      history: []
     }
   },
   components: {
@@ -210,7 +129,7 @@ export default {
   },
   computed: {
     titleStack () {
-      return ['Hospital', 'Paciente', 'Historial', this.pacient.name]
+      return ['Hospital', 'Paciente', 'Historial', this.pacient.nombre]
     },
     heroRouterLinkTo () {
       return { name: 'home' }
@@ -222,24 +141,68 @@ export default {
   mounted () {
     if (this.dataUrl) {
       this.isLoading = true
-      axios
-        .get(this.dataUrl)
+      axios({
+        method: 'GET',
+        url: 'https://patas-app.herokuapp.com/api/paciente/esp',
+        params: {
+          id: this.$route.params.id
+        }
+      })
         .then(r => {
-          this.isLoading = false
-          if (r.data && r.data.data) {
-            if (r.data.data.length > this.perPage) {
-              this.paginated = true
-            }
-            this.pacient = r.data.data.find(
-              element => element.id === parseInt(this.$route.params.id)
-            )
-          }
+          this.pacient = r.data
         })
         .catch(e => {
-          this.isLoading = false
           this.$buefy.toast.open({
             message: `Error: ${e.message}`,
-            type: 'is-danger'
+            type: 'is-danger',
+            queue: false
+          })
+        })
+      axios({
+        method: 'GET',
+        url: 'https://patas-app.herokuapp.com/api/historial',
+        params: {
+          id: this.$route.params.id
+        }
+      })
+        .then(r => {
+          this.history = r.data
+        })
+        .catch(e => {
+          this.$buefy.toast.open({
+            message: `Error: ${e.message}`,
+            type: 'is-danger',
+            queue: false
+          })
+        })
+    }
+  },
+  methods: {
+    updateComment (idRegister, comment) {
+      console.log(idRegister)
+      console.log(comment)
+      axios({
+        method: 'PUT',
+        url: 'https://patas-app.herokuapp.com/api/historial/comentario',
+        params: {
+          id: idRegister
+        },
+        data: {
+          comentario: comment
+        }
+      })
+        .then(r => {
+          console.log('respuesta')
+          console.log(r.data)
+          const indexToEdit = this.history.findIndex((element) => element._id === idRegister)
+          this.history[indexToEdit] = r.data
+        })
+        .catch(e => {
+          console.log(e)
+          this.$buefy.toast.open({
+            message: `Error: ${e.message}`,
+            type: 'is-danger',
+            queue: false
           })
         })
     }

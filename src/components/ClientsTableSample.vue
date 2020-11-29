@@ -32,10 +32,10 @@
         </div>
       </b-table-column>
       <b-table-column cell-class="link-name" label="Nombre" field="name" sortable v-slot="props">
-        <div v-on:click="showPacient(props.row.id)" >{{ props.row.name }}</div>
+        <div v-on:click="showPacient(props.row.id)" >{{ props.row.nombre }}</div>
       </b-table-column>
       <b-table-column label="Telefono" field="company" sortable v-slot="props">
-        {{ props.row.company }}
+        {{ props.row.telefono }}
       </b-table-column>
       <!-- <b-table-column label="City" field="city" sortable v-slot="props">
         {{ props.row.city }}
@@ -114,27 +114,29 @@ export default {
     }
   },
   mounted () {
-    console.log(this.dataUrl)
     if (this.dataUrl) {
       this.isLoading = true
-      axios
-        .get(this.dataUrl)
-        .then((r) => {
-          this.isLoading = false
-          if (r.data && r.data.data) {
-            if (r.data.data.length > this.perPage) {
-              this.paginated = true
-            }
-            this.clients = r.data.data
-          }
+      axios({
+        method: 'GET',
+        url: 'https://patas-app.herokuapp.com/api/pacientes',
+        params: {
+          id: this.$store.state.userId
+        }
+      }).then((r) => {
+        this.isLoading = false
+        // if (r.data && r.data.data) {
+        //   if (r.data.data.length > this.perPage) {
+        //     this.paginated = true
+        //   }
+        this.clients = r.data
+        // }
+      }).catch((e) => {
+        this.isLoading = false
+        this.$buefy.toast.open({
+          message: `Error: ${e.message}`,
+          type: 'is-danger'
         })
-        .catch((e) => {
-          this.isLoading = false
-          this.$buefy.toast.open({
-            message: `Error: ${e.message}`,
-            type: 'is-danger'
-          })
-        })
+      })
     }
   },
   methods: {

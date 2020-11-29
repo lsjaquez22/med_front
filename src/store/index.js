@@ -43,6 +43,12 @@ export default new Vuex.Store({
       state.userEmail = user.email
       state.userCompany = user.hospital
     },
+    updateDoctor (state, user) {
+      state.userId = user.id
+      state.userName = user.username
+      state.userEmail = user.email
+      state.userCompany = user.hospital
+    },
     logoutDoctor (state) {
       localStorage.removeItem('jwt')
     },
@@ -104,6 +110,22 @@ export default new Vuex.Store({
       context.commit('isLogged')
       context.commit('isLogged', false)
       context.commit('isAdmin', false)
+    },
+    async updateUser (context, user) {
+      const response = await axios({
+        method: 'PUT',
+        url: `https://patas-app.herokuapp.com/api/doctor/update/${this.state.userId}`,
+        headers: {
+          'x-access-token': localStorage.getItem('jwt')
+        },
+        data: {
+          username: user.username,
+          email: user.email
+        }
+      })
+      if (response.status === 200) {
+        context.commit('updateDoctor', response.data)
+      }
     }
   }
 })

@@ -1,11 +1,7 @@
 <template>
   <card-component title="Actualizar Contraseña" icon="lock">
     <form @submit.prevent="submit">
-      <b-field
-        horizontal
-        label="Contraseña Actual"
-        message="Campo Requerido"
-      >
+      <b-field horizontal label="Contraseña Actual" message="Campo Requerido">
         <b-input
           v-model="form.password_current"
           name="password_current"
@@ -41,6 +37,7 @@
       <b-field horizontal>
         <div class="control footer-menu-profile">
           <button
+            :disabled="samePassword"
             type="submit"
             class="button is-success"
             :class="{ 'is-loading': isLoading }"
@@ -58,6 +55,7 @@
 
 <script>
 import CardComponent from '@/components/CardComponent'
+import axios from 'axios'
 export default {
   name: 'PasswordUpdateForm',
   components: {
@@ -73,19 +71,57 @@ export default {
       }
     }
   },
+  computed: {
+    samePassword () {
+      if (this.form.password === null) {
+        return true
+      }
+      if (this.form.password_current === null) {
+        return true
+      }
+      if (this.form.password !== this.form.password_confirmation) {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
   methods: {
     submit () {
       this.isLoading = true
-      setTimeout(() => {
-        this.isLoading = false
-        this.$buefy.snackbar.open(
-          {
-            message: 'Updated',
-            queue: false
-          },
-          500
-        )
+      axios({
+        method: 'PUT',
+        url: `https://patas-app.herokuapp.com/api/doctor/update/password/${this.$store.state.userId}`,
+        headers: {
+          'x-access-token': localStorage.getItem('jwt')
+        },
+        data: {
+          password: this.form.password_current,
+          newPassword: this.form.password
+        }
       })
+        .then(() => {
+          setTimeout(() => {
+            this.isLoading = false
+            this.$buefy.snackbar.open(
+              {
+                message: 'Updated',
+                queue: false
+              },
+              500
+            )
+          })
+        })
+        .catch(() => {
+          this.$buefy.snackbar.open(
+            {
+              message: 'Error',
+              queue: false
+            },
+            500
+          )
+          this.isLoading = false
+        })
     }
   }
 }
