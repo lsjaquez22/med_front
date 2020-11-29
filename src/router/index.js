@@ -23,7 +23,7 @@ const routes = [
     },
     path: '/admin/login',
     name: 'admin_login',
-    component: () => import(/* webpackChunkName: "tables" */ '../views/Login.vue')
+    component: () => import(/* webpackChunkName: "tables" */ '../views/admin/Login.vue')
   },
   {
     meta: {
@@ -176,7 +176,6 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('jwt') == null) {
-      store.dispatch('isLogged', false)
       next({
         path: '/login',
         params: { nextUrl: to.fullPath }
@@ -199,10 +198,22 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (localStorage.getItem('jwt') == null) {
-      store.dispatch('isLogged', false)
       next()
     } else {
-      next({ name: 'home' })
+      const admin = store.state.isAdmin
+      if (to.matched.some(record => record.meta.admin)) {
+        if (admin) {
+          next()
+        } else {
+          next({ name: 'home' })
+        }
+      } else {
+        if (admin) {
+          next({ name: 'Hospitales admin' })
+        } else {
+          next()
+        }
+      }
     }
   }
 })

@@ -77,8 +77,8 @@
               <span>Messages</span>
             </a> -->
             <hr class="navbar-divider" />
-            <a class="navbar-item">
-              <b-icon icon="logout" custom-size="default"></b-icon>
+            <a class="navbar-item" v-on:click="logout()">
+              <b-icon icon="logout" custom-size="default" ></b-icon>
               <span>Cerrar Sesión</span>
             </a>
           </div>
@@ -142,9 +142,8 @@ export default {
       this.isMenuNavBarActive = !this.isMenuNavBarActive
     },
     logout () {
-      this.$buefy.snackbar.open({
-        message: 'Log out clicked',
-        queue: false
+      this.$store.dispatch('logoutDoctor').then(() => {
+        this.$router.push({ path: '/login' })
       })
     }
   }

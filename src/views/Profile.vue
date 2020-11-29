@@ -55,7 +55,7 @@ export default {
     titleStack () {
       return ['Perfil']
     },
-    ...mapState(['userName', 'userEmail', 'userComapny'])
+    ...mapState(['userName', 'userEmail', 'userCompany'])
   }
 }
 </script>

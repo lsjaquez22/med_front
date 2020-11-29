@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <div v-if="logged">
-      <nav-bar />
-      <aside-menu :menu="menu" />
-    </div>
+    <nav-bar v-if="logged"/>
+    <aside-menu :menu="menu" />
     <router-view />
     <!-- <footer-bar /> -->
   </div>
@@ -25,7 +23,23 @@ export default {
       return this.$store.state.isLogged
     },
     menu () {
-      if (this.$route.meta.admin) {
+      if (this.logged === false) {
+        return [
+          'Login',
+          [
+            {
+              to: '/login',
+              icon: 'hospital-building',
+              label: 'Ingresar Doctor'
+            },
+            {
+              to: '/admin/login',
+              icon: 'clipboard-account',
+              label: 'Login Admin'
+            }
+          ]
+        ]
+      } else if (this.$route.meta.admin) {
         return [
           'Admin',
           [
