@@ -31,8 +31,8 @@ export default {
     }
   },
   methods: {
-    upload (file) {
-      this.$emit('input', file)
+    upload (event) {
+      this.$emit('input', event)
       // Use this as an example for handling file uploads
       // let formData = new FormData()
       // formData.append('file', file)

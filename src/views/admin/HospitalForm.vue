@@ -30,8 +30,8 @@
             <hr />
             <b-field label="Nombre" message="Campo Requerido" horizontal>
               <b-input
-                v-model="form.name"
-                placeholder="e.g. John Doe"
+                v-model="nameToEdit"
+                placeholder="e.g. Hospital"
                 required
               />
             </b-field>
@@ -69,6 +69,7 @@
                   type="is-success"
                   :loading="isLoading"
                   native-type="submit"
+                  v-on:click="updateData()"
                   >Guardar</b-button
                 >
               </b-field>
@@ -99,6 +100,16 @@
           <hr />
           <b-field label="Nombre">
             <b-input :value="form.name" custom-class="is-static" readonly />
+          </b-field>
+          <hr />
+          <b-field>
+            <b-button
+              type="is-danger"
+              :loading="isLoading"
+              native-type="submit"
+              v-on:click="deleteData()"
+              >Borrar</b-button
+            >
           </b-field>
           <!-- <b-field label="Telefono">
             <b-input :value="form.company" custom-class="is-static" readonly />
@@ -131,7 +142,6 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
-import find from 'lodash/find'
 import TitleBar from '@/components/TitleBar'
 import HeroBar from '@/components/HeroBar'
 import Tiles from '@/components/Tiles'
@@ -159,6 +169,7 @@ export default {
     return {
       isLoading: false,
       form: this.getClearFormObject(),
+      nameToEdit: null,
       createdReadable: null,
       isProfileExists: false
     }
@@ -210,6 +221,7 @@ export default {
 
       if (!newValue) {
         this.form = this.getClearFormObject()
+        this.nameToEdit = null
       } else {
         this.getData()
       }
@@ -232,17 +244,20 @@ export default {
     },
     getData () {
       if (this.$route.params.id) {
-        axios
-          .get(`${this.$router.options.base}data-sources/hospitales.json`)
+        axios({
+          method: 'GET',
+          url: `https://patas-app.herokuapp.com/api/hospital/${this.$route.params.id}`,
+          headers: {
+            'x-access-token': localStorage.getItem('jwt')
+          }
+        })
           .then((r) => {
-            const item = find(
-              r.data.data,
-              (item) => item.id === parseInt(this.$route.params.id)
-            )
+            const item = r.data
 
             if (item) {
               this.isProfileExists = true
               this.form = item
+              this.nameToEdit = item.name
               this.form.created_date = new Date(item.created_mm_dd_yyyy)
               this.createdReadable = dayjs(
                 new Date(item.created_mm_dd_yyyy)
@@ -259,6 +274,69 @@ export default {
             })
           })
       }
+    },
+    updateData () {
+      if (this.isProfileExists) {
+        axios({
+          method: 'PUT',
+          url: `https://patas-app.herokuapp.com/api/hospital/${this.$route.params.id}`,
+          headers: {
+            'x-access-token': localStorage.getItem('jwt')
+          },
+          data: {
+            name: this.nameToEdit
+          }
+        }).then((r) => {
+          const item = r.data
+
+          if (item) {
+            this.isProfileExists = true
+            this.form = item
+            this.nameToEdit = item.name
+            this.form.created_date = new Date(item.created_mm_dd_yyyy)
+            this.createdReadable = dayjs(
+              new Date(item.created_mm_dd_yyyy)
+            ).format('MMM D, YYYY')
+          } else {
+            this.$router.push({ name: 'hospital.new' })
+          }
+        })
+      } else {
+        axios({
+          method: 'POST',
+          url: ' https://patas-app.herokuapp.com/api/hospital',
+          headers: {
+            'x-access-token': localStorage.getItem('jwt')
+          },
+          data: {
+            name: this.nameToEdit
+          }
+        }).then(r => {
+          const item = r.data
+          if (item) {
+            this.isProfileExists = true
+            this.form = item
+            this.nameToEdit = item.name
+            this.form.created_date = new Date(item.created_mm_dd_yyyy)
+            this.createdReadable = dayjs(
+              new Date(item.created_mm_dd_yyyy)
+            ).format('MMM D, YYYY')
+          } else {
+            this.$router.push({ name: 'client.new' })
+          }
+        })
+      }
+    },
+    deleteData () {
+      axios({
+        method: 'DELETE',
+        url: `https://patas-app.herokuapp.com/api/hospital/${this.$route.params.id}`,
+        headers: {
+          'x-access-token': localStorage.getItem('jwt')
+        }
+      }).then(r => {
+        this.$router.push({ name: 'Hospitales admin' })
+      })
     },
     input (v) {
       this.createdReadable = dayjs(v).format('MMM D, YYYY')

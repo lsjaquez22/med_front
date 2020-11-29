@@ -30,37 +30,36 @@
             <hr />
             <b-field label="Nombre" message="Campo Requerido" horizontal>
               <b-input
-                v-model="formToEdit.name"
+                v-model="nameToEdit"
                 placeholder="e.g. John Doe"
                 required
               />
             </b-field>
             <b-field label="Correo" message="Campo Requerido" horizontal>
               <b-input
-                v-model="form.mail"
+                v-model="emailToEdit"
                 placeholder="e.g. Geoffreyton"
                 required
               />
             </b-field>
-            <b-field label="Contrañsea" message="Campo Requerido" horizontal>
+            <b-field label="Contrañsea" horizontal>
               <b-input
-                v-model="form.password"
+                v-model="newPassword"
                 type="password"
-                required
               />
             </b-field>
             <b-field label="Hospital" message="Campo Requerido" horizontal>
               <b-select
-                v-model="formToEdit.company"
+                v-model="hospitalToEdit"
                 placeholder="Seleccionar Hospital"
                 required
               >
                 <option
-                  v-for="(hospital, index) in hospitals"
+                  v-for="(hospital, index) in hospitales"
                   :key="index"
-                  :value="hospital"
+                  :value="hospital.name"
                 >
-                  {{ hospital }}
+                  {{ hospital.name }}
                 </option>
               </b-select>
             </b-field>
@@ -84,6 +83,7 @@
                   type="is-success"
                   :loading="isLoading"
                   native-type="submit"
+                  v-on:click="updateData()"
                   >Guardar</b-button
                 >
               </b-field>
@@ -113,13 +113,23 @@
           />
           <hr />
           <b-field label="Nombre">
-            <b-input :value="form.name" custom-class="is-static" readonly />
+            <b-input :value="form.username" custom-class="is-static" readonly />
           </b-field>
           <b-field label="Hospital">
-            <b-input :value="form.company" custom-class="is-static" readonly />
+            <b-input :value="form.hospital" custom-class="is-static" readonly />
           </b-field>
           <b-field label="Correo">
-            <b-input :value="form.mail" custom-class="is-static" readonly />
+            <b-input :value="form.email" custom-class="is-static" readonly />
+          </b-field>
+          <hr />
+          <b-field>
+            <b-button
+              type="is-danger"
+              :loading="isLoading"
+              native-type="submit"
+              v-on:click="deleteData()"
+              >Borrar</b-button
+            >
           </b-field>
           <!-- <b-field label="City">
             <b-input :value="form.city" custom-class="is-static" readonly />
@@ -149,7 +159,6 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
-import find from 'lodash/find'
 import TitleBar from '@/components/TitleBar'
 import HeroBar from '@/components/HeroBar'
 import Tiles from '@/components/Tiles'
@@ -180,7 +189,11 @@ export default {
       createdReadable: null,
       isProfileExists: false,
       formToEdit: this.getClearFormObject(),
-      hospitals: ['Hospital Angeles', 'Hospital Cima', 'Hospital Christus Muguerza']
+      nameToEdit: null,
+      emailToEdit: null,
+      newPassword: null,
+      hospitalToEdit: null,
+      hospitales: []
     }
   },
   computed: {
@@ -230,6 +243,10 @@ export default {
 
       if (!newValue) {
         this.form = this.getClearFormObject()
+        this.nameToEdit = null
+        this.emailToEdit = null
+        this.newPassword = null
+        this.hospitalToEdit = null
       } else {
         this.getData()
       }
@@ -252,24 +269,28 @@ export default {
     },
     getData () {
       if (this.$route.params.id) {
-        axios
-          .get(`${this.$router.options.base}data-sources/doctores.json`)
+        axios({
+          method: 'GET',
+          url: `https://patas-app.herokuapp.com/api/doctors/get/${this.$route.params.id}`,
+          headers: {
+            'x-access-token': localStorage.getItem('jwt')
+          }
+        })
           .then((r) => {
-            const item = find(
-              r.data.data,
-              (item) => item.id === parseInt(this.$route.params.id)
-            )
+            const item = r.data
 
             if (item) {
               this.isProfileExists = true
               this.form = item
-              this.formToEdit = { ...item }
+              this.nameToEdit = item.username
+              this.emailToEdit = item.email
+              this.hospitalToEdit = item.hospital
               this.form.created_date = new Date(item.created_mm_dd_yyyy)
               this.createdReadable = dayjs(
                 new Date(item.created_mm_dd_yyyy)
               ).format('MMM D, YYYY')
             } else {
-              this.$router.push({ name: 'doctor.new' })
+              this.$router.push({ name: 'hospital.new' })
             }
           })
           .catch((e) => {
@@ -280,6 +301,95 @@ export default {
             })
           })
       }
+      axios({
+        method: 'GET',
+        url: 'https://patas-app.herokuapp.com/api/hospital',
+        headers: {
+          'x-access-token': localStorage.getItem('jwt')
+        }
+      })
+        .then((r) => {
+          this.hospitales = r.data
+        })
+        .catch((e) => {
+          this.isLoading = false
+          this.$buefy.toast.open({
+            message: `Error: ${e.message}`,
+            type: 'is-danger'
+          })
+        })
+    },
+    updateData () {
+      if (this.isProfileExists) {
+        axios({
+          method: 'PUT',
+          url: `https://patas-app.herokuapp.com/api/doctor/update/${this.$route.params.id}`,
+          headers: {
+            'x-access-token': localStorage.getItem('jwt')
+          },
+          data: {
+            username: this.nameToEdit,
+            email: this.emailToEdit,
+            hospital: this.hospitalToEdit
+          }
+        }).then((r) => {
+          const item = r.data
+
+          if (item) {
+            this.isProfileExists = true
+            this.form = item
+            this.nameToEdit = item.username
+            this.emailToEdit = item.email
+            this.hospitalToEdit = item.hospital
+            this.form.created_date = new Date(item.created_mm_dd_yyyy)
+            this.createdReadable = dayjs(
+              new Date(item.created_mm_dd_yyyy)
+            ).format('MMM D, YYYY')
+          } else {
+            this.$router.push({ name: 'hospital.new' })
+          }
+        })
+      } else {
+        axios({
+          method: 'POST',
+          url: 'https://patas-app.herokuapp.com/api/admin/signup',
+          headers: {
+            'x-access-token': localStorage.getItem('jwt')
+          },
+          data: {
+            username: this.nameToEdit,
+            email: this.emailToEdit,
+            hospital: this.hospitalToEdit,
+            password: this.newPassword
+          }
+        }).then(r => {
+          const item = r.data
+          if (item) {
+            this.isProfileExists = true
+            this.form = item
+            this.nameToEdit = item.username
+            this.emailToEdit = item.email
+            this.hospitalToEdit = item.hospital
+            this.form.created_date = new Date(item.created_mm_dd_yyyy)
+            this.createdReadable = dayjs(
+              new Date(item.created_mm_dd_yyyy)
+            ).format('MMM D, YYYY')
+          } else {
+            this.$router.push({ name: 'client.new' })
+          }
+        })
+      }
+    },
+    deleteData () {
+      axios({
+        method: 'DELETE',
+        url: `https://patas-app.herokuapp.com/api/doctor/delete/${this.$route.params.id}`,
+        headers: {
+          'x-access-token': localStorage.getItem('jwt')
+        }
+      }).then(r => {
+        this.$router.push({ name: 'Doctores admin' })
+      })
     },
     input (v) {
       this.createdReadable = dayjs(v).format('MMM D, YYYY')
@@ -291,7 +401,7 @@ export default {
         this.isLoading = false
 
         this.$buefy.snackbar.open({
-          message: 'Demo only',
+          message: 'OK',
           queue: false
         })
       }, 500)

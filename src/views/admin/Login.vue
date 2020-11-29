@@ -7,17 +7,17 @@
         <div class="field">
           <label class="label">Nombre de usuario</label>
           <div class="control">
-            <input class="input" type="text" />
+            <input class="input" type="text" v-model="username"/>
           </div>
         </div>
         <div class="field">
           <label class="label">Contraseña</label>
           <div class="control">
-            <input class="input" type="password" />
+            <input class="input" type="password" v-model="password"/>
           </div>
         </div>
         <div class="control has-text-centered">
-          <button class="button">Ingresar</button>
+          <button class="button" v-on:click="login()">Ingresar</button>
         </div>
       </div>
       <div class="column"></div>
@@ -26,7 +26,26 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      username: '',
+      password: ''
+    }
+  },
+  methods: {
+    login () {
+      this.$store
+        .dispatch('loginAdmin', {
+          username: this.username,
+          password: this.password
+        })
+        .then(() => {
+          this.$router.push({ path: '/admin' })
+        })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

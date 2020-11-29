@@ -25,9 +25,8 @@
             </b-field>
             <hr /> -->
             <b-field label="Avatar" horizontal>
-              <file-picker />
+              <file-picker v-on:input="image" />
             </b-field>
-            <hr />
             <b-field label="Nombre" message="Campo Requerido" horizontal>
               <b-input
                 v-model="nameToEdit"
@@ -240,6 +239,9 @@ export default {
     this.getData()
   },
   methods: {
+    image (img) {
+      console.log(img)
+    },
     getClearFormObject () {
       return {
         id: null,

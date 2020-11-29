@@ -50,12 +50,16 @@
         </div>
       </div>
       <section class="card_result">
-        <article class="message is-link" v-for="item in history" :key="item._id">
+        <article
+          class="message is-link"
+          v-for="item in history"
+          :key="item._id"
+        >
           <div class="message-body">
             <div class="columns">
               <div class="column is-2">
                 <figure class="image">
-                  <img v-bind:src="'data:image/jpeg;base64,'+item.foto" />
+                  <img v-bind:src="'data:image/jpeg;base64,' + item.foto" v-on:click="openModal(item.foto)" />
                 </figure>
               </div>
               <div class="column is-2">
@@ -87,7 +91,12 @@
                     </b-field>
                   </div>
                   <div class="column is-3 save_comment">
-                    <button class="button is-primary " v-on:click="updateComment(item._id, item.comentario)">Guardar</button>
+                    <button
+                      class="button is-primary "
+                      v-on:click="updateComment(item._id, item.comentario)"
+                    >
+                      Guardar
+                    </button>
                   </div>
                 </div>
               </div>
@@ -95,6 +104,15 @@
           </div>
         </article>
       </section>
+    </div>
+    <div v-if="stateModal" class="modal is-active">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <p class="image">
+          <img v-bind:src="'data:image/jpeg;base64,' + imageToShow" alt="" />
+        </p>
+      </div>
+      <button class="modal-close is-large" aria-label="close" v-on:click="closeModal()"></button>
     </div>
   </div>
 </template>
@@ -118,7 +136,9 @@ export default {
       perPage: 10,
       checkedRows: [],
       pacient: {},
-      history: []
+      history: [],
+      stateModal: false,
+      imageToShow: null
     }
   },
   components: {
@@ -179,8 +199,6 @@ export default {
   },
   methods: {
     updateComment (idRegister, comment) {
-      console.log(idRegister)
-      console.log(comment)
       axios({
         method: 'PUT',
         url: 'https://patas-app.herokuapp.com/api/historial/comentario',
@@ -192,19 +210,25 @@ export default {
         }
       })
         .then(r => {
-          console.log('respuesta')
-          console.log(r.data)
-          const indexToEdit = this.history.findIndex((element) => element._id === idRegister)
+          const indexToEdit = this.history.findIndex(
+            element => element._id === idRegister
+          )
           this.history[indexToEdit] = r.data
         })
         .catch(e => {
-          console.log(e)
           this.$buefy.toast.open({
             message: `Error: ${e.message}`,
             type: 'is-danger',
             queue: false
           })
         })
+    },
+    closeModal () {
+      this.stateModal = false
+    },
+    openModal (img) {
+      this.stateModal = true
+      this.imageToShow = img
     }
   }
 }

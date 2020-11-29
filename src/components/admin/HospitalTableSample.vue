@@ -15,7 +15,7 @@
       :striped="true"
       :hoverable="true"
       default-sort="name"
-      :data="clients"
+      :data="hospitales"
     > -->
     <b-table
       :loading="isLoading"
@@ -24,7 +24,7 @@
       :striped="true"
       :hoverable="true"
       default-sort="name"
-      :data="clients"
+      :data="hospitales"
     >
       <b-table-column cell-class="has-no-head-mobile is-image-cell" v-slot="props">
         <div class="image">
@@ -48,7 +48,7 @@
       </b-table-column> -->
       <b-table-column custom-key="actions" cell-class="is-actions-cell" v-slot="props">
         <div class="buttons is-right">
-          <router-link :to="{name:'hospital.edit', params: {id: props.row.id}}" class="button is-small is-primary">
+          <router-link :to="{name:'hospital.edit', params: {id: props.row._id}}" class="button is-small is-primary">
             <b-icon icon="account-edit" size="is-small"/>
           </router-link>
           <!-- <button class="button is-small is-danger" type="button" @click.prevent="trashModal(props.row)">
@@ -97,7 +97,7 @@ export default {
     return {
       isModalActive: false,
       trashObject: null,
-      clients: [],
+      hospitales: [],
       isLoading: false,
       paginated: false,
       perPage: 10,
@@ -116,16 +116,17 @@ export default {
   mounted () {
     if (this.dataUrl) {
       this.isLoading = true
-      axios
-        .get(this.dataUrl)
+      axios({
+        method: 'GET',
+        url: 'https://patas-app.herokuapp.com/api/hospital',
+        headers: {
+          'x-access-token': localStorage.getItem('jwt')
+        }
+      })
         .then((r) => {
           this.isLoading = false
-          if (r.data && r.data.data) {
-            if (r.data.data.length > this.perPage) {
-              this.paginated = true
-            }
-            this.clients = r.data.data
-          }
+
+          this.hospitales = r.data
         })
         .catch((e) => {
           this.isLoading = false

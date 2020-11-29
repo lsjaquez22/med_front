@@ -15,7 +15,7 @@
       :striped="true"
       :hoverable="true"
       default-sort="name"
-      :data="clients"
+      :data="doctores"
     > -->
     <b-table
       :loading="isLoading"
@@ -24,7 +24,7 @@
       :striped="true"
       :hoverable="true"
       default-sort="name"
-      :data="clients"
+      :data="doctores"
     >
       <b-table-column cell-class="has-no-head-mobile is-image-cell" v-slot="props">
         <div class="image">
@@ -32,13 +32,13 @@
         </div>
       </b-table-column>
       <b-table-column label="Nombre" field="name" sortable v-slot="props">
-        {{ props.row.name }}
+        {{ props.row.username }}
       </b-table-column>
       <b-table-column label="Hospital" field="company" sortable v-slot="props">
-        {{ props.row.company }}
+        {{ props.row.hospital }}
       </b-table-column>
       <b-table-column label="Correo" field="city" sortable v-slot="props">
-        {{ props.row.company }}
+        {{ props.row.email }}
       </b-table-column>
       <!-- <b-table-column cell-class="is-progress-col" label="Progress" field="progress" sortable v-slot="props">
         <progress class="progress is-small is-primary" :value="props.row.progress" max="100">{{ props.row.progress }}</progress>
@@ -48,7 +48,7 @@
       </b-table-column> -->
       <b-table-column custom-key="actions" cell-class="is-actions-cell" v-slot="props">
         <div class="buttons is-right">
-          <router-link :to="{name:'doctor.edit', params: {id: props.row.id}}" class="button is-small is-primary">
+          <router-link :to="{name:'doctor.edit', params: {id: props.row._id}}" class="button is-small is-primary">
             <b-icon icon="account-edit" size="is-small"/>
           </router-link>
           <!-- <button class="button is-small is-danger" type="button" @click.prevent="trashModal(props.row)">
@@ -97,7 +97,7 @@ export default {
     return {
       isModalActive: false,
       trashObject: null,
-      clients: [],
+      doctores: [],
       isLoading: false,
       paginated: false,
       perPage: 10,
@@ -116,16 +116,17 @@ export default {
   mounted () {
     if (this.dataUrl) {
       this.isLoading = true
-      axios
-        .get(this.dataUrl)
+      axios({
+        method: 'GET',
+        url: 'https://patas-app.herokuapp.com/api/doctors/get',
+        headers: {
+          'x-access-token': localStorage.getItem('jwt')
+        }
+      })
         .then((r) => {
           this.isLoading = false
-          if (r.data && r.data.data) {
-            if (r.data.data.length > this.perPage) {
-              this.paginated = true
-            }
-            this.clients = r.data.data
-          }
+
+          this.doctores = r.data
         })
         .catch((e) => {
           this.isLoading = false

@@ -43,6 +43,12 @@ export default new Vuex.Store({
       state.userEmail = user.email
       state.userCompany = user.hospital
     },
+    loginAdmin (state, user) {
+      localStorage.setItem('jwt', user.accessToken)
+      state.userName = user.username
+      state.userEmail = user.email
+      state.userId = user.id
+    },
     updateDoctor (state, user) {
       state.userId = user.id
       state.userName = user.username
@@ -107,7 +113,7 @@ export default new Vuex.Store({
       }
     },
     logoutDoctor (context, value) {
-      context.commit('isLogged')
+      context.commit('logoutDoctor')
       context.commit('isLogged', false)
       context.commit('isAdmin', false)
     },
@@ -125,6 +131,23 @@ export default new Vuex.Store({
       })
       if (response.status === 200) {
         context.commit('updateDoctor', response.data)
+      }
+    },
+    async loginAdmin (context, value) {
+      const response = await axios({
+        method: 'POST',
+        url: 'https://patas-app.herokuapp.com/api/auth/signin',
+        data: {
+          username: value.username,
+          password: value.password
+        }
+      })
+      if (response.status === 200) {
+        context.commit('loginAdmin', response.data)
+        context.commit('isLogged', true)
+        context.commit('isAdmin', true)
+      } else {
+        console.log(response)
       }
     }
   }
