@@ -1,6 +1,6 @@
 module.exports = {
-  publicPath: process.env.DEPLOY_ENV === 'GH_PAGES'
-    ? '/admin-one-vue-bulma-dashboard/'
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/med_front/'
     : '/',
 
   // Remove moment.js from chart.js
