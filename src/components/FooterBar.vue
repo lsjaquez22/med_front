@@ -5,7 +5,7 @@
         <div class="level-left">
           <div class="level-item">
             <div class="footer-copyright">
-              <b>&copy; {{ year }}, JustBoil.me</b> &mdash; Admin One Demo
+              <b>&copy; {{ year }}, JustBoil.me</b> &mdash; Tlaloc - TBD
               <span class="tag">v1.5.0</span>
             </div>
           </div>
