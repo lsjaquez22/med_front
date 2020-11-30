@@ -1,7 +1,7 @@
 <template>
   <aside v-show="isAsideVisible" class="aside is-placed-left is-expanded">
     <aside-tools :is-main-menu="true">
-      <span slot="label"> <b>Logo</b> </span>
+      <span slot="label"> <b>Tlaloc - TBD</b> </span>
     </aside-tools>
     <div class="menu is-menu-main">
       <template v-for="(menuGroup, index) in menu">
